@@ -1,0 +1,21 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="shadow_width">3dp</dimen>
+    <dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="title_height">50dp</dimen>
+    <dimen name="space_height">50dp</dimen>
+    <dimen name="btn_height">55dp</dimen>
+    <dimen name="space_large_height">70dp</dimen>
+    <dimen name="custom_text_size">15dp</dimen>
+    <dimen name="custom_text_big_size">18dp</dimen>
+    <dimen name="custom_text_large_size">20dp</dimen>
+    <dimen name="custom_text_small_size">13dp</dimen>
+    <dimen name="custom_text_mini_size">12dp</dimen>
+    <dimen name="custom_text_max_size">24dp</dimen>
+    <dimen name="dimen_1px">1px</dimen>
+    <dimen name="dimen_6">4dp</dimen>
+    <dimen name="adapter_record_width">60dp</dimen>
+    <dimen name="adapter_record_height">30dp</dimen>
+
+</resources>
