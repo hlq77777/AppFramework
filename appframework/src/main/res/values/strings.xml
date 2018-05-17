@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">AppFramework</string>
+
+    <!--BaseActivity Dialog-->
+    <string name="notifyTitle">设置权限</string>
+    <string name="notifyMsg">该应用需要到设置中允许权限使用</string>
+    <string name="notifyMsgAll">该应用需要到设置中允许权限使用,取消将不能进行相应认证</string>
+    <string name="notifyMsgUpdata">自动更新需要到设置中允许存储权限使用,取消将不能更新</string>
+    <string name="notifyMsgCamera">获取图像需要到设置中允许相机和存储权限使用,取消将不能拍照</string>
+    <string name="notifyMsgPhone">拨打电话需要到设置中允许电话权限使用,取消将不能拨打</string>
+    <string name="notifyMsgShare">分享需要到设置中允许电话、存储和位置权限使用,取消将不能分享</string>
+    <string name="notifyMsgContact">打开通讯录需要到设置中允许电话和通讯录权限使用,取消将不能打开</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="setting">设置</string>
+    <string name="title">标题</string>
+    <string name="dialog_hint">努力加载中</string>
+    <string name="saveText">保存成功</string>
+    <string name="savefinish">离开此页</string>
+    <string name="savehere">留下查看</string>
+    <string name="toast_waiting">敬请期待</string>
+    <string name="send_sms_success">验证码已发送</string>
+    <string name="confirmText">提交成功</string>
 </resources>
