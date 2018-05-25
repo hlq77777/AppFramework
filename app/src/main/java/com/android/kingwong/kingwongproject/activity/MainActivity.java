@@ -1,32 +1,56 @@
 package com.android.kingwong.kingwongproject.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.Window;
+import android.view.View;
+import android.widget.Button;
 
+import com.android.kingwong.appframework.Activity.BaseActivity;
 import com.android.kingwong.appframework.ehttp.EHttp;
 import com.android.kingwong.appframework.ehttp.callback.ApiCallback;
 import com.android.kingwong.appframework.ehttp.callback.FileCallBack;
 import com.android.kingwong.appframework.ehttp.callback.StringCallback;
 import com.android.kingwong.appframework.ehttp.model.CommonResult;
 import com.android.kingwong.appframework.ehttp.request.HttpRequest;
+import com.android.kingwong.appframework.util.IntentUtil;
+import com.android.kingwong.appframework.util.OneClickUtil.AntiShake;
 import com.android.kingwong.kingwongproject.R;
 import com.android.kingwong.kingwongproject.bean.UserInfo;
+import com.android.kingwong.kingwongproject.module.Updata;
 
 import java.io.File;
 
+import butterknife.BindView;
+import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
+
+    @BindView(R.id.button_updata)
+    Button button_updata;
 
     Disposable disposable;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
-        setContentView(R.layout.activity_updata);
+    public int getContentViewId() {
+        return R.layout.activity_main;
+    }
 
+    @Override
+    public void OnCreate(Bundle savedInstanceState) {
+
+    }
+
+    @OnClick({R.id.button_updata})
+    public void onClick(View view) {
+        if (AntiShake.check(view.getId())) {
+            //判断是否多次点击
+            return;
+        }
+        switch (view.getId()) {
+            case R.id.button_updata:
+                IntentUtil.startActivity(this, Updata.class);
+                break;
+        }
     }
 
     public void get(){

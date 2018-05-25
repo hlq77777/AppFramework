@@ -7,7 +7,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 27
         versionCode 2
-        versionName "1.1.0"
+        versionName "1.1.0.1"
     }
     buildTypes {
         release {
@@ -36,4 +36,5 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation project(':appframework')
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'  //当库中引用butterknife时，需在项目app中module内引用annotationProcessor
 }

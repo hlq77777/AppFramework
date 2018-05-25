@@ -52,7 +52,7 @@ import com.daimajia.numberprogressbar.NumberProgressBar;
  */
 
 public class UpDataActivity extends Activity {
-    public static String UpData = "com.android.cwtz.shikedai.receiver.updata";
+    public static String UpData = "com.android.kingwong.kingwongproject.receiver.updata";
     //=================更新内容
     private TextView tv_upadata_text;
     private UpDataResponse upData;
@@ -167,7 +167,7 @@ public class UpDataActivity extends Activity {
         btn_updata_ok.setText("正在下载");
         Intent intent = new Intent();
         intent.setAction(UpDataService.UPDATA_ACTION);
-        intent.setPackage("com.android.cwtz.shikedai");
+        intent.setPackage("com.android.kingwong.kingwongproject");
         intent.putExtra("data", upData);
         startService(intent);
     }

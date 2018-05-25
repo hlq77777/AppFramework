@@ -4,14 +4,18 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 
 import com.android.kingwong.appframework.AppFramework;
+import com.android.kingwong.appframework.BaseApplication;
+import com.android.kingwong.appframework.util.ApkUtil;
+import com.android.kingwong.appframework.util.LogUtil;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MyApplication extends Application {
+public class MyApplication extends BaseApplication {
 
     private List<Activity> updataLineList = new LinkedList<Activity>();
 
@@ -20,37 +24,9 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //防止重复加载
-        int pid = android.os.Process.myPid();
-        String processAppName = getAppName(pid);
-        if (processAppName == null || processAppName.equals("")) {
-            return;
-        }
-        AppFramework.init(this);
     }
 
-    public String getAppName(int pID) {
-        String processName = null;
-        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
-        List l = am.getRunningAppProcesses();
-        Iterator i = l.iterator();
-        PackageManager pm = this.getPackageManager();
-        while (i.hasNext()) {
-            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
-            try {
-                if (info.pid == pID) {
-                    CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
-                    processName = info.processName;
-                    return processName;
-                }
-            } catch (Exception e) {
-
-            }
-        }
-        return processName;
-    }
-
-    // 单例模式中获取唯一的ShiKeDaiApplication实例
+    // 单例模式中获取唯一的Application实例
     public static MyApplication getInstance() {
         if (null == instance) {
             instance = new MyApplication();

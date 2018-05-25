@@ -89,6 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Activity
     public static final int PERMISSION_PHONE_CODE = 2;
     public static final int PERMISSION_SHARE_CODE = 3;
     public static final int PERMISSION_CONTACT_CODE = 4;
+    public static final int PERMISSION_WRITE_CODE = 5;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -401,6 +402,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Activity
                     showRequestDialog(getResources().getString(R.string.notifyMsgContact));
                 }
             }
+        }else if (requestCode == PERMISSION_WRITE_CODE) {
+            if (!verifyPermissions(grantResults)) {
+                if(!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                    showRequestDialog(getResources().getString(R.string.notifyMsgUpdata));
+                }
+            }
         }
     }
 
@@ -481,6 +488,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Activity
             ActivityCompat.requestPermissions(this,
                     needRequestPermissionList.toArray(new String[needRequestPermissionList.size()]),
                     PERMISSION_CONTACT_CODE);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkWritePermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            String[] permissionsNeeded = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            ActivityCompat.requestPermissions(this, permissionsNeeded, PERMISSION_WRITE_CODE);
             return false;
         }
         return true;
