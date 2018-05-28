@@ -91,6 +91,7 @@ public class MainActivity extends BaseActivity {
         HttpRequest request=new HttpRequest.Builder()
                 .addBodyParams(json)
                 .build();
+
         disposable= EHttp.post(this,"http://api.vd.cn/info/getbonusnotice/",request, new ApiCallback<UserInfo>(CommonResult.class) {
             @Override
             public void onFailure(Throwable e) {
@@ -115,36 +116,6 @@ public class MainActivity extends BaseActivity {
                 //progressBar.setProgress(0);
             }
         });
-
-
-
     }
 
-    private void download(){
-        String url="http://180.163.220.71/softdl.360tpcdn.com/auto/20180309/102615199_2f0a7c0426fa87ac8112aff10789ed08.exe";
-        EHttp.get(this, url, new FileCallBack(this.getExternalCacheDir().getPath()+"/ehttp","ehttp.apk") {
-            @Override
-            public void onStart() {
-                super.onStart();
-                //tvGetStr.setText("开始下载...");
-                //progressBar.setProgress(0);
-            }
-
-            @Override
-            public void onDownProgress(long bytesWritten, long totalSize) {
-                //tvGetStr.setText("开始下载"+(bytesWritten*100/totalSize)+"%");
-                //progressBar.setProgress((int) (bytesWritten*100/totalSize));
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-                //tvGetStr.setText("download failed:"+e.getMessage());
-            }
-
-            @Override
-            public void onSuccess(File rusult) {
-                //tvGetStr.setText("download sucess:"+rusult.getAbsolutePath());
-            }
-        });
-    }
 }

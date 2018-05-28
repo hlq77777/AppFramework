@@ -493,6 +493,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Activity
         return true;
     }
 
+    /**
+     *检查下载文件开启权限（自动更新）
+     */
     public boolean checkWritePermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

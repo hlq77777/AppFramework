@@ -15,9 +15,11 @@ import com.android.kingwong.appframework.ehttp.model.ApiService;
 import com.android.kingwong.appframework.ehttp.request.HttpRequest;
 import com.android.kingwong.appframework.ehttp.request.RequestBodyWrapper;
 import com.android.kingwong.appframework.ehttp.request.RequestParams;
+import com.android.kingwong.appframework.entity.FileEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.CookieJar;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -148,6 +152,26 @@ public class EHttp {
         RequestBody body = wrapRequestBody(params.getRequestBody(), callback);
         Map<String, String> urlParams = params.getUrlParams();
         Observable<ResponseBody> observable = request.apiService.postBody(url, urlParams, body);
+        return execute(tag, observable, callback);
+    }
+
+    //上传图文
+    public static <R> Disposable postImage(Object tag, String url, HttpRequest request, HttpCallback<R> callback, List<FileEntity> files){
+        if (request == null) {
+            request = new HttpRequest();
+        }
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);//表单类型
+        Map<String, String> urlParams = request.requestParams.getUrlParams();
+        //多张图片
+        for (int i = 0; i < files.size(); i++) {
+            File file = new File(files.get(i).getFile_path());//filePath 图片地址
+            RequestBody fileBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            //RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), file);
+            //RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
+            builder.addFormDataPart(files.get(i).getFile_key(), file.getName(), fileBody);
+        }
+        List<MultipartBody.Part> parts = builder.build().parts();
+        Observable<ResponseBody> observable = request.apiService.postMulti(url, urlParams, parts);
         return execute(tag, observable, callback);
     }
 
