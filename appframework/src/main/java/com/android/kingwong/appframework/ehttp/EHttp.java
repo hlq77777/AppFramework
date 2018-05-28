@@ -156,7 +156,7 @@ public class EHttp {
     }
 
     //上传图文
-    public static <R> Disposable postImage(Object tag, String url, HttpRequest request, HttpCallback<R> callback, List<FileEntity> files){
+    public static <R> Disposable postFile(Object tag, String url, HttpRequest request, HttpCallback<R> callback, List<FileEntity> files){
         if (request == null) {
             request = new HttpRequest();
         }
