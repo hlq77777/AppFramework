@@ -226,8 +226,7 @@ public class HttpRequest {
             return this;
         }
 
-        public Builder addFileParams(String key, String fileName, String contentType, File file
-        ) {
+        public Builder addFileParams(String key, String fileName, String contentType, File file) {
             requestParams.addFileParams(key, fileName, contentType, file);
             return this;
         }

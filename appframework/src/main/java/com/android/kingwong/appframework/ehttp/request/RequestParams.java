@@ -16,6 +16,8 @@ import okhttp3.RequestBody;
 public class RequestParams {
     public final static String APPLICATION_OCTET_STREAM = "application/octet-stream";
     public final static String APPLICATION_JSON = "application/json";
+    public final static String IMAGE_PNG = "image/png";
+    public final static String IMAGE_JPG = "image/jpg";
     protected ConcurrentHashMap<String, String> urlParams = new ConcurrentHashMap<String, String>();
     protected ConcurrentHashMap<String, String> formParams = new ConcurrentHashMap<String, String>();
     protected ConcurrentHashMap<String, BytesInfo> bytesParams = new ConcurrentHashMap<String, BytesInfo>();
@@ -58,8 +60,7 @@ public class RequestParams {
 
     public void addFileParams(String key, String fileName, String contentType, File file) {
         if (file != null && !file.exists() && key != null) {
-            fileParams.put(key, new FileInfo(file, contentType,
-                    fileName));
+            fileParams.put(key, new FileInfo(file, contentType, fileName));
         }
     }
 
@@ -119,11 +120,18 @@ public class RequestParams {
     /*表单上传*/
     private RequestBody createFormBody() {
         FormBody.Builder builder = new FormBody.Builder();
-        for (String key : urlParams.keySet()) {
-            builder.add(key, urlParams.get(key));
+        for (String key : formParams.keySet()) {
+            builder.add(key, formParams.get(key));
         }
         return builder.build();
     }
+//    private RequestBody createFormBody() {
+//        FormBody.Builder builder = new FormBody.Builder();
+//        for (String key : urlParams.keySet()) {
+//            builder.add(key, urlParams.get(key));
+//        }
+//        return builder.build();
+//    }
 
     /*表单，文件等混合上传*/
     private RequestBody createMultipartBody() {

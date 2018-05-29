@@ -52,6 +52,11 @@ public interface ApiService {
     @POST()
     Observable<ResponseBody> postBody(@Url String url, @QueryMap Map<String, String> urlMaps, @Body RequestBody body);
 
+    /*通用post请求*/
+    @Streaming
+    @POST()
+    Observable<ResponseBody> post(@Url String url, @QueryMap Map<String, String> urlMaps);
+
     /*通用get请求*/
     @Streaming
     @GET()

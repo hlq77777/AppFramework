@@ -1,16 +1,17 @@
 package com.android.kingwong.kingwongproject.activity;
 
-import android.os.Bundle;
+ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.android.kingwong.appframework.Activity.BaseActivity;
 import com.android.kingwong.appframework.ehttp.EHttp;
 import com.android.kingwong.appframework.ehttp.callback.ApiCallback;
-import com.android.kingwong.appframework.ehttp.callback.FileCallBack;
 import com.android.kingwong.appframework.ehttp.callback.StringCallback;
 import com.android.kingwong.appframework.ehttp.model.CommonResult;
 import com.android.kingwong.appframework.ehttp.request.HttpRequest;
+import com.android.kingwong.appframework.ehttp.request.RequestParams;
+import com.android.kingwong.appframework.entity.FileEntity;
 import com.android.kingwong.appframework.util.IntentUtil;
 import com.android.kingwong.appframework.util.OneClickUtil.AntiShake;
 import com.android.kingwong.kingwongproject.R;
@@ -92,7 +93,7 @@ public class MainActivity extends BaseActivity {
                 .addBodyParams(json)
                 .build();
 
-        disposable= EHttp.post(this,"http://api.vd.cn/info/getbonusnotice/",request, new ApiCallback<UserInfo>(CommonResult.class) {
+        disposable = EHttp.postBody(this,"http://api.vd.cn/info/getbonusnotice/",request, new ApiCallback<UserInfo>(CommonResult.class) {
             @Override
             public void onFailure(Throwable e) {
                 //tvGetStr.setText("post failed:"+e.getMessage());
@@ -114,6 +115,34 @@ public class MainActivity extends BaseActivity {
             public void onStart() {
                 super.onStart();
                 //progressBar.setProgress(0);
+            }
+        });
+    }
+
+    private void postFile(FileEntity mfile){
+        File file = new File(mfile.getFile_path());
+        HttpRequest request = new HttpRequest.Builder()
+                .addUrlParams("", "")
+                .addFileParams(mfile.getFile_key(), file.getName(), RequestParams.APPLICATION_OCTET_STREAM, file)
+                .build();
+        disposable = EHttp.postBody(this, "http://api.vd.cn/info/getbonusnotice/", request, new ApiCallback<FileEntity>(){
+            @Override
+            public void onStart() {
+                super.onStart();
+
+            }
+            @Override
+            public void onUpProgress(long bytesWritten, long totalSize) {
+                super.onUpProgress(bytesWritten, totalSize);
+
+            }
+            @Override
+            public void onSuccess(FileEntity response) {
+
+            }
+            @Override
+            public void onFailure(Throwable e) {
+
             }
         });
     }

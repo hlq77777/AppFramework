@@ -143,8 +143,18 @@ public class EHttp {
         return execute(tag, observable, callback);
     }
 
-    /*tag标记一类网络请求订阅，可以用来取消所有带有此tag的订阅，一般传入Context对象*/
     public static <R> Disposable post(Object tag, String url, HttpRequest request, HttpCallback<R> callback) {
+        if (request == null) {
+            request = new HttpRequest();
+        }
+        RequestParams params = request.requestParams;
+        Map<String, String> urlParams = params.getUrlParams();
+        Observable<ResponseBody> observable = request.apiService.post(url, urlParams);
+        return execute(tag, observable, callback);
+    }
+
+    /*tag标记一类网络请求订阅，可以用来取消所有带有此tag的订阅，一般传入Context对象*/
+    public static <R> Disposable postBody(Object tag, String url, HttpRequest request, HttpCallback<R> callback) {
         if (request == null) {
             request = new HttpRequest();
         }
