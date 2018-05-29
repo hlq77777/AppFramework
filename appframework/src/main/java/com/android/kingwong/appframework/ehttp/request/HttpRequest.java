@@ -22,7 +22,7 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 
 /**
- * Created by baozhong 2018/03/23
+ * Created by KingWong 2018/05/18
  */
 public class HttpRequest {
     public RequestParams requestParams;
@@ -102,7 +102,6 @@ public class HttpRequest {
             return this;
         }
 
-
         public Builder readTimeout(long timeout) {
             if (timeout > 0) {
                 isNewOkHttp = true;
@@ -151,7 +150,6 @@ public class HttpRequest {
             return this;
         }
 
-
         public Builder addNetworkInterceptor(Interceptor interceptor) {
             if (interceptor != null) {
                 isNewOkHttp = true;
@@ -185,7 +183,6 @@ public class HttpRequest {
             return this;
         }
 
-
         public Builder addCallAdapterFactory(CallAdapter.Factory factory) {
             if (factory != null) {
                 isNewRetrofit = true;
@@ -193,7 +190,6 @@ public class HttpRequest {
             }
             return this;
         }
-
 
         /*下面是参数配置*/
          /*添加请求头信息*/

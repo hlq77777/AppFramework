@@ -12,11 +12,9 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
-
 /**
- * Created by wbz360 on 2018/3/19.
+ * Created by KingWong 2018/05/18
  */
-
 public class CallbackObserver<R> extends DisposableObserver<R> {
     private Object tag;
     private HttpCallback<R> callback;

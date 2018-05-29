@@ -20,7 +20,6 @@ import com.android.kingwong.appframework.util.LogUtil;
 
 import retrofit2.HttpException;
 
-
 /**
  * 统一处理了API异常错误EHttp
  */
@@ -43,7 +42,6 @@ public class ApiException extends Exception {
         if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
             //统一处理，或者转化错误等
-
         }
         return e;
     }

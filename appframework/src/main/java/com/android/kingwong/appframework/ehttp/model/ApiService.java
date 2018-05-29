@@ -34,8 +34,10 @@ import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
+/**
+ * Created by KingWong 2018/05/18
+ */
 public interface ApiService {
-
     /*表单上传*/
     @POST()
     @FormUrlEncoded
@@ -58,5 +60,4 @@ public interface ApiService {
     @Streaming
     @GET
     Observable<ResponseBody> download(@Url String url, @QueryMap Map<String, String> urlMaps);
-
 }

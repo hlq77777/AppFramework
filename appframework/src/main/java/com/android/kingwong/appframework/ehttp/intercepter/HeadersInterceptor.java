@@ -16,7 +16,6 @@
 
 package com.android.kingwong.appframework.ehttp.intercepter;
 
-
 import java.io.IOException;
 import java.util.Map;
 
@@ -26,7 +25,6 @@ import okhttp3.Response;
 
 /**
  * 配置请求头部信息
-
  */
 public class HeadersInterceptor implements Interceptor {
     private Map<String, String> commonHeaders;

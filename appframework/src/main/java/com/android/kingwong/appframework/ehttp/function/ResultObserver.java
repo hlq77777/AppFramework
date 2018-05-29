@@ -15,9 +15,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import okhttp3.ResponseBody;
 
-
 /**
- * Created by wbz360 on 2018/3/19.
+ * Created by KingWong 2018/05/18
  */
 /*统一处理：包括结果解析，错误处理等*/
 @Deprecated

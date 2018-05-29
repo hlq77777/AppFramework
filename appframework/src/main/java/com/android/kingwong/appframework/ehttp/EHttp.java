@@ -47,7 +47,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by wangbaozhong 2018/03/23
+ * Created by KingWong 2018/05/18
  */
 public class EHttp {
     public static final String TAG = "EHttp";
@@ -186,25 +186,24 @@ public class EHttp {
                 .subscribeWith(new CallbackObserver<R>(tag, callback));
     }
 
-    /*文件上传进度监测*/
+    /**
+     * 文件上传进度监测
+     */
     public static <R> RequestBody wrapRequestBody(RequestBody requestBody, final HttpCallback<R> callback) {
         if (callback == null) return requestBody;
         RequestBodyWrapper requestBodyWrapper = new RequestBodyWrapper(requestBody, new RequestBodyWrapper.Listener() {
             @Override
             public void onRequestProgress(final long bytesWritten, final long contentLength) {
-
                 EHttp.getInstance().mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         callback.onUpProgress(bytesWritten, contentLength);
                     }
                 });
-
             }
         });
         return requestBodyWrapper;
     }
-
 
     /**
      * 取消同一个tag对应的所有网络请求
@@ -219,7 +218,6 @@ public class EHttp {
                 tagList.remove(disposable);
             }
         }
-
     }
 
     /**
@@ -306,25 +304,21 @@ public class EHttp {
         /*下面是okhttp配置*/
         public Builder connectTimeout(long timeout) {
             if (timeout > 0) {
-                okHttpBuilder
-                        .connectTimeout(timeout, TimeUnit.MILLISECONDS);
+                okHttpBuilder.connectTimeout(timeout, TimeUnit.MILLISECONDS);
             }
             return this;
         }
 
-
         public Builder readTimeout(long timeout) {
             if (timeout > 0) {
-                okHttpBuilder
-                        .readTimeout(timeout, TimeUnit.MILLISECONDS);
+                okHttpBuilder.readTimeout(timeout, TimeUnit.MILLISECONDS);
             }
             return this;
         }
 
         public Builder writeTimeout(long timeout) {
             if (timeout > 0) {
-                okHttpBuilder
-                        .writeTimeout(timeout, TimeUnit.MILLISECONDS);
+                okHttpBuilder.writeTimeout(timeout, TimeUnit.MILLISECONDS);
 
             }
             return this;
@@ -332,33 +326,28 @@ public class EHttp {
 
         public Builder cookieJar(CookieJar cookieJar) {
             if (cookieJar != null) {
-                okHttpBuilder
-                        .cookieJar(cookieJar);
-
+                okHttpBuilder.cookieJar(cookieJar);
             }
             return this;
         }
 
         public Builder sslSocketFactory(SSLSocketFactory sslSocketFactory) {
             if (sslSocketFactory != null) {
-                okHttpBuilder
-                        .sslSocketFactory(sslSocketFactory);
+                okHttpBuilder.sslSocketFactory(sslSocketFactory);
             }
             return this;
         }
 
         public Builder hostnameVerifier(HostnameVerifier hostnameVerifier) {
             if (hostnameVerifier != null) {
-                okHttpBuilder
-                        .hostnameVerifier(hostnameVerifier);
+                okHttpBuilder.hostnameVerifier(hostnameVerifier);
             }
             return this;
         }
 
         public Builder addInterceptor(Interceptor interceptor) {
             if (interceptor != null) {
-                okHttpBuilder
-                        .addInterceptor(interceptor);
+                okHttpBuilder.addInterceptor(interceptor);
             }
             return this;
         }
@@ -366,8 +355,7 @@ public class EHttp {
 
         public Builder addNetworkInterceptor(Interceptor interceptor) {
             if (interceptor != null) {
-                okHttpBuilder
-                        .addNetworkInterceptor(interceptor);
+                okHttpBuilder.addNetworkInterceptor(interceptor);
             }
             return this;
         }
@@ -403,4 +391,3 @@ public class EHttp {
         }
     }
 }
-

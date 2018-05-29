@@ -10,7 +10,7 @@ import java.io.InputStream;
 import okhttp3.ResponseBody;
 
 /**
- * Created by baozhong 2016/02/01
+ * Created by KingWong 2018/05/18
  */
 public abstract class FileCallBack extends HttpCallback<File> {
     /**
@@ -77,6 +77,5 @@ public abstract class FileCallBack extends HttpCallback<File> {
 
         }
     }
-
 
 }

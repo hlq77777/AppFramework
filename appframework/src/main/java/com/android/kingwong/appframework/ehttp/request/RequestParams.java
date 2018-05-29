@@ -11,7 +11,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 /**
- * Created by baozhong 2018/03/19
+ * Created by KingWong 2018/05/18
  */
 public class RequestParams {
     public final static String APPLICATION_OCTET_STREAM = "application/octet-stream";
@@ -23,9 +23,7 @@ public class RequestParams {
     protected ConcurrentHashMap<String, String> headerParams = new ConcurrentHashMap<String, String>();
     protected Object requestBody = null;//单个自定义的body实体上传，比如Json字符串，单个文件。
 
-    public RequestParams() {
-
-    }
+    public RequestParams() {}
 
     /*添加请求头信息*/
     public void addHeaderParams(String name, String value) {
@@ -58,8 +56,7 @@ public class RequestParams {
         }
     }
 
-    public void addFileParams(String key, String fileName, String contentType, File file
-    ) {
+    public void addFileParams(String key, String fileName, String contentType, File file) {
         if (file != null && !file.exists() && key != null) {
             fileParams.put(key, new FileInfo(file, contentType,
                     fileName));
@@ -96,7 +93,6 @@ public class RequestParams {
         if (contentType == null) {
             contentType = "application/json;charset=utf-8";
         }
-
         return RequestBody.create(MediaType.parse(contentType), content);
     }
 
@@ -131,33 +127,24 @@ public class RequestParams {
 
     /*表单，文件等混合上传*/
     private RequestBody createMultipartBody() {
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM);
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         // Add string params
-        for (ConcurrentHashMap.Entry<String, String> entry : formParams
-                .entrySet()) {
+        for (ConcurrentHashMap.Entry<String, String> entry : formParams.entrySet()) {
             builder.addFormDataPart(entry.getKey(), entry.getValue());
         }
         // Add stream params
-        for (ConcurrentHashMap.Entry<String, BytesInfo> entry : bytesParams
-                .entrySet()) {
+        for (ConcurrentHashMap.Entry<String, BytesInfo> entry : bytesParams.entrySet()) {
             BytesInfo bytesInfo = entry.getValue();
             if (bytesInfo.bytes != null) {
-                RequestBody streamBody = RequestBody.create(
-                        MediaType.parse(bytesInfo.contentType),
-                        bytesInfo.bytes);
-                builder.addFormDataPart(entry.getKey(), bytesInfo.name,
-                        streamBody);
+                RequestBody streamBody = RequestBody.create(MediaType.parse(bytesInfo.contentType), bytesInfo.bytes);
+                builder.addFormDataPart(entry.getKey(), bytesInfo.name, streamBody);
             }
         }
         // Add file params
-        for (ConcurrentHashMap.Entry<String, FileInfo> entry : fileParams
-                .entrySet()) {
+        for (ConcurrentHashMap.Entry<String, FileInfo> entry : fileParams.entrySet()) {
             FileInfo fileInfo = entry.getValue();
-            RequestBody fileBody = RequestBody.create(
-                    MediaType.parse(fileInfo.contentType), fileInfo.file);
-            builder.addFormDataPart(entry.getKey(), fileInfo.customFileName,
-                    fileBody);
+            RequestBody fileBody = RequestBody.create(MediaType.parse(fileInfo.contentType), fileInfo.file);
+            builder.addFormDataPart(entry.getKey(), fileInfo.customFileName, fileBody);
         }
         return builder.build();
     }
@@ -167,8 +154,7 @@ public class RequestParams {
             return null;
         }
         final StringBuilder result = new StringBuilder();
-        for (ConcurrentHashMap.Entry<String, String> entry : urlParams
-                .entrySet()) {
+        for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
             if (result.length() > 0) {
                 result.append("&");
             }
@@ -178,13 +164,11 @@ public class RequestParams {
                 result.append(entry.getValue());
             }
         }
-
         if (!result.equals("") && !result.equals("?")) {
             url += url.contains("?") ? "&" : "?";
             url += result.toString();
         }
         return url;
-
     }
 
     public static class FileInfo implements Serializable {
@@ -195,8 +179,7 @@ public class RequestParams {
 
         public FileInfo(File file, String contentType, String customFileName) {
             this.file = file;
-            this.contentType = contentType == null ? APPLICATION_OCTET_STREAM
-                    : contentType;
+            this.contentType = contentType == null ? APPLICATION_OCTET_STREAM : contentType;
             this.customFileName = customFileName;
         }
     }
@@ -209,10 +192,7 @@ public class RequestParams {
         public BytesInfo(byte[] bytes, String name, String contentType) {
             this.bytes = bytes;
             this.name = name;
-            this.contentType = contentType == null ? APPLICATION_OCTET_STREAM
-                    : contentType;
-
+            this.contentType = contentType == null ? APPLICATION_OCTET_STREAM : contentType;
         }
-
     }
 }

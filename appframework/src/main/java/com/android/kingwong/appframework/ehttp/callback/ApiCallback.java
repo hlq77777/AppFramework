@@ -12,9 +12,8 @@ import java.lang.reflect.Type;
 import okhttp3.ResponseBody;
 
 /**
- * Created by wbz360 on 2018/3/20.
+ * Created by KingWong 2018/05/18
  */
-
 public abstract class ApiCallback<T> extends HttpCallback<T> {
     private Type dataType;
     private Class<?> dataRawType;

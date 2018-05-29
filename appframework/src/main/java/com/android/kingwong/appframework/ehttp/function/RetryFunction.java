@@ -8,11 +8,10 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Predicate;
 
 /**
- * Created by wbz360 on 2018/3/21.
+ * Created by KingWong 2018/05/18
+ * 处理异常重试
  */
-/*处理异常重试*/
 public class RetryFunction implements Predicate<Throwable> {
-
     @Override
     public boolean test(@NonNull Throwable throwable) throws Exception {
         if ((throwable instanceof ConnectException

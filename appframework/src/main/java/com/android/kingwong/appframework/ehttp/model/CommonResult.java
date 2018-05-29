@@ -23,6 +23,7 @@ public  class CommonResult<T> extends ApiResult<T>{
     private int code;
     private String message;
     private T data;
+
     public int getCode() {
         return code;
     }

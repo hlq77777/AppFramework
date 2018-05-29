@@ -6,15 +6,11 @@ import android.graphics.BitmapFactory;
 import okhttp3.ResponseBody;
 
 /**
- *
- * Created by baozhong 2016/02/01
+ * Created by KingWong 2018/05/18
  */
-public abstract class BitmapCallback extends HttpCallback<Bitmap>
-{
+public abstract class BitmapCallback extends HttpCallback<Bitmap> {
     @Override
-    public Bitmap parseResponse(ResponseBody body) throws Exception
-    {
+    public Bitmap parseResponse(ResponseBody body) throws Exception {
         return BitmapFactory.decodeStream(body.byteStream());
     }
-
 }

@@ -8,9 +8,8 @@ import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
 
 /**
- * Created by wbz360 on 2018/3/21.
+ * Created by KingWong 2018/05/18
  */
-
 public class ResultFunction<R> implements Function<ResponseBody, R> {
     private HttpCallback<R> callback;
 
