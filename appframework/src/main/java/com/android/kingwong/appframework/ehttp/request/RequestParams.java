@@ -39,6 +39,12 @@ public class RequestParams {
         }
     }
 
+    public void addUrlParams(Map<String, String> map){
+        for (String key : map.keySet()) {
+            urlParams.put(key, map.get(key));
+        }
+    }
+
     /*自定义实体，比如Json字符串，各种自定义的RequestBody*/
     public void addBodyParams(String stringBody) {
         this.requestBody = stringBody;

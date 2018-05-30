@@ -8,6 +8,7 @@ import com.android.kingwong.appframework.ehttp.model.ApiService;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
@@ -202,6 +203,11 @@ public class HttpRequest {
         //url拼接
         public Builder addUrlParams(String key, String value) {
             requestParams.addUrlParams(key, value);
+            return this;
+        }
+
+        public Builder addUrlParams(Map<String, String> map) {
+            requestParams.addUrlParams(map);
             return this;
         }
 
