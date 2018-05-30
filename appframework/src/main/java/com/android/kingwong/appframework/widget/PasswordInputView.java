@@ -1,4 +1,4 @@
-package com.android.kingwong.appframework.view;
+package com.android.kingwong.appframework.widget;
 
 import android.content.Context;
 import android.content.res.Resources;

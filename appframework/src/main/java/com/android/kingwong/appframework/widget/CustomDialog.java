@@ -1,4 +1,4 @@
-package com.android.kingwong.appframework.view;
+package com.android.kingwong.appframework.widget;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.kingwong.appframework.R;
-import com.android.kingwong.appframework.view.EditText.ClearEditText;
+import com.android.kingwong.appframework.widget.EditText.ClearEditText;
 
 /**
  * Created by KingWong on 2017/9/4.

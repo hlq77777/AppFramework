@@ -27,7 +27,7 @@ import com.android.kingwong.appframework.util.ApkUtil;
 import com.android.kingwong.appframework.util.LogUtil;
 import com.android.kingwong.appframework.util.StringUtil;
 import com.android.kingwong.appframework.util.ToastUtil;
-import com.android.kingwong.appframework.view.CustomDialog;
+import com.android.kingwong.appframework.widget.CustomDialog;
 import com.android.kingwong.kingwongproject.MyApplication;
 import com.android.kingwong.kingwongproject.R;
 import com.android.kingwong.kingwongproject.constant.ConstantValue;

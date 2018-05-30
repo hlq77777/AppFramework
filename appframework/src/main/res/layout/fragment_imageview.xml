@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.android.kingwong.appframework.view.MultiStateView
+    <com.android.kingwong.appframework.widget.MultiStateView
         android:id="@+id/multiStateView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -20,6 +20,6 @@
                 android:src="@mipmap/ic_launcher" />
         </ScrollView>
 
-    </com.android.kingwong.appframework.view.MultiStateView>
+    </com.android.kingwong.appframework.widget.MultiStateView>
 
 </LinearLayout>

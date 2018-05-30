@@ -1,4 +1,4 @@
-package com.android.kingwong.appframework.view.loadingview;
+package com.android.kingwong.appframework.widget.loadingview;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;

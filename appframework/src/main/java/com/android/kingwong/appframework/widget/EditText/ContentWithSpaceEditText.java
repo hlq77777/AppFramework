@@ -1,4 +1,4 @@
-package com.android.kingwong.appframework.view.EditText;
+package com.android.kingwong.appframework.widget.EditText;
 
 import android.content.Context;
 import android.content.res.TypedArray;

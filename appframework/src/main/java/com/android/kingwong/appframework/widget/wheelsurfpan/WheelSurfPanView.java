@@ -1,4 +1,4 @@
-package com.android.kingwong.appframework.view.wheelsurfpan;
+package com.android.kingwong.appframework.widget.wheelsurfpan;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

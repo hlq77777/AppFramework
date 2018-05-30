@@ -1,4 +1,4 @@
-package com.android.kingwong.appframework.view.wheelsurfpan;
+package com.android.kingwong.appframework.widget.wheelsurfpan;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -35,8 +35,8 @@ import com.android.kingwong.appframework.BuildConfig;
 import com.android.kingwong.appframework.R;
 import com.android.kingwong.appframework.util.LogUtil;
 import com.android.kingwong.appframework.util.StringUtil;
-import com.android.kingwong.appframework.view.CustomDialog;
-import com.android.kingwong.appframework.view.PicPopupWindow;
+import com.android.kingwong.appframework.widget.CustomDialog;
+import com.android.kingwong.appframework.widget.PicPopupWindow;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;

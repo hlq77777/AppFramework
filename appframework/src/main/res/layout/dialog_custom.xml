@@ -76,7 +76,7 @@
                 android:orientation="horizontal"
                 android:visibility="gone">
 
-                <com.android.kingwong.appframework.view.EditText.ClearEditText
+                <com.android.kingwong.appframework.widget.EditText.ClearEditText
                     android:id="@+id/dialog_code_edt"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"

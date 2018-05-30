@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 
 import com.android.kingwong.appframework.R;
 import com.android.kingwong.appframework.R2;
-import com.android.kingwong.appframework.view.CustomDialog;
-import com.android.kingwong.appframework.view.MultiStateView;
+import com.android.kingwong.appframework.widget.CustomDialog;
+import com.android.kingwong.appframework.widget.MultiStateView;
 
 import java.util.ArrayList;
 import java.util.List;
