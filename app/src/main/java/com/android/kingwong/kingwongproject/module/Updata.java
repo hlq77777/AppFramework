@@ -22,9 +22,9 @@ import com.android.kingwong.appframework.util.FileUtil;
 import com.android.kingwong.appframework.util.LogUtil;
 import com.android.kingwong.appframework.util.OneClickUtil.AntiShake;
 import com.android.kingwong.appframework.util.ToastUtil;
+import com.android.kingwong.appframework.widget.NumberProgressBar.NumberProgressBar;
 import com.android.kingwong.kingwongproject.BuildConfig;
 import com.android.kingwong.kingwongproject.R;
-import com.daimajia.numberprogressbar.NumberProgressBar;
 
 import java.io.File;
 

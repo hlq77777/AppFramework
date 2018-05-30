@@ -34,7 +34,7 @@ import com.android.kingwong.kingwongproject.constant.ConstantValue;
 import com.android.kingwong.kingwongproject.response.UpDataResponse;
 import com.android.kingwong.kingwongproject.service.UpDataService;
 import com.android.kingwong.kingwongproject.util.SharedPreferencesUtil;
-import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.android.kingwong.appframework.widget.NumberProgressBar.NumberProgressBar;
 
 /**
  * Created by KingWong on 2017/9/19.

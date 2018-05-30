@@ -42,7 +42,7 @@ import com.daimajia.androidanimations.library.YoYo;
  *      android:textColor="@color/text_color_text"
  *      android:textColorHint="@color/text_color_hint"
  *      android:textSize="@dimen/custom_text_size"
- *      app:type="IDCard" />
+ *      app:edit_type="IDCard" />
  */
 
 public class ContentWithSpaceEditText extends AppCompatEditText implements View.OnFocusChangeListener{
@@ -85,7 +85,7 @@ public class ContentWithSpaceEditText extends AppCompatEditText implements View.
 
     private void parseAttributeSet(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ContentWithSpaceEditText, 0, 0);
-        contentType = ta.getInt(R.styleable.ContentWithSpaceEditText_type, 0);
+        contentType = ta.getInt(R.styleable.ContentWithSpaceEditText_edit_type, 0);
         ta.recycle();
         initType();
         setSingleLine();

@@ -52,7 +52,6 @@ dependencies {
     api 'com.jakewharton:butterknife:8.4.0'
     api 'com.daimajia.easing:library:2.0@aar'
     api 'com.daimajia.androidanimations:library:2.3@aar'
-    api 'com.daimajia.numberprogressbar:library:1.4@aar'
     api 'com.google.code.gson:gson:2.8.1'
     api 'com.github.bumptech.glide:glide:4.7.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
