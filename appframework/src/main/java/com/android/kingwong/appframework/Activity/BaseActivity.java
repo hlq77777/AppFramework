@@ -37,7 +37,6 @@ import com.android.kingwong.appframework.util.LogUtil;
 import com.android.kingwong.appframework.util.StringUtil;
 import com.android.kingwong.appframework.widget.CustomDialog;
 import com.android.kingwong.appframework.widget.PicPopupWindow;
-import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -105,18 +104,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Activity
     protected void onDestroy() {
         super.onDestroy();
         mUnbinder.unbind();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 
     private void initViewAndData(){

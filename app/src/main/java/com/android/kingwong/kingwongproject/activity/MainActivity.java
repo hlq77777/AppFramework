@@ -2,7 +2,6 @@ package com.android.kingwong.kingwongproject.activity;
 
  import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import com.android.kingwong.appframework.Activity.BaseActivity;
 import com.android.kingwong.appframework.ehttp.EHttp;
@@ -17,17 +16,15 @@ import com.android.kingwong.appframework.util.OneClickUtil.AntiShake;
 import com.android.kingwong.kingwongproject.R;
 import com.android.kingwong.kingwongproject.bean.UserInfo;
 import com.android.kingwong.kingwongproject.module.Updata;
+ import com.android.kingwong.kingwongproject.novate.ExampleActivity;
 
-import java.io.File;
+ import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseActivity {
-
-    @BindView(R.id.button_updata)
-    Button button_updata;
 
     Disposable disposable;
 
@@ -41,7 +38,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.button_updata})
+    @OnClick({R.id.button_updata, R.id.button_novate})
     public void onClick(View view) {
         if (AntiShake.check(view.getId())) {
             //判断是否多次点击
@@ -50,6 +47,9 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.button_updata:
                 IntentUtil.startActivity(this, Updata.class);
+                break;
+            case R.id.button_novate:
+                IntentUtil.startActivity(this, ExampleActivity.class);
                 break;
         }
     }

@@ -22,7 +22,6 @@ import com.android.kingwong.appframework.R2;
 import com.android.kingwong.appframework.util.LogUtil;
 import com.android.kingwong.appframework.widget.CustomDialog;
 import com.android.kingwong.appframework.widget.MultiStateView;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,18 +82,6 @@ public abstract class BaseStatusActivity extends AppCompatActivity implements Ac
     protected void onDestroy() {
         super.onDestroy();
         mUnbinder.unbind();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 
     private void initViewAndData(){

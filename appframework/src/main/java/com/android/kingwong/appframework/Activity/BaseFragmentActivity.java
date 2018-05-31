@@ -8,8 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
-import com.umeng.analytics.MobclickAgent;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -36,18 +34,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         mUnbinder.unbind();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 
     private void initViewAndData(){

@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.kingwong.appframework.Activity.BaseActivity;
 import com.android.kingwong.appframework.ehttp.EHttp;
@@ -25,6 +26,11 @@ import com.android.kingwong.appframework.util.ToastUtil;
 import com.android.kingwong.appframework.widget.NumberProgressBar.NumberProgressBar;
 import com.android.kingwong.kingwongproject.BuildConfig;
 import com.android.kingwong.kingwongproject.R;
+import com.android.kingwong.kingwongproject.novate.RequstActivity;
+import com.android.kingwong.kingwongproject.util.HttpUtil;
+import com.android.kingwong.novate.Novate;
+import com.android.kingwong.novate.Throwable;
+import com.android.kingwong.novate.callback.RxFileCallBack;
 
 import java.io.File;
 
@@ -126,45 +132,106 @@ public class Updata extends BaseActivity{
         isstart = true;
         progressbar_layout.setVisibility(View.VISIBLE);
         btn_updata_ok.setText("正在下载");
-        startDownload();
+        //startDownload();
+        startRxDownload();
     }
 
+//    //开始下载
+//    private void startDownload(){
+//        String url = "http://imtt.dd.qq.com/16891/14A4C02997E946B800D87348E5E0CBAA.apk?fsname=com.apicloud.A6977052155909_3.4.4_344.apk&csr=1bbd";
+//        EHttp.get(this, url, new FileCallBack(filedir, filename) {
+//            @Override
+//            public void onStart() {
+//                super.onStart();
+//                tv_length.setText("开始下载：");
+//                progressBar.setProgress(0);
+//            }
+//
+//            @Override
+//            public void onDownProgress(long bytesWritten, long totalSize) {
+//                tv_length.setText("下载进度:");
+//                progressBar.setProgress((int) (bytesWritten*100/totalSize));
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable e) {
+//                LogUtil.e("download failed", e.getMessage());
+//                FileUtil.deleteFile(filepath);
+//                tv_length.setText("下载失败:");
+//                btn_updata_ok.setText("重新下载");
+//                progressBar.setProgress(0);
+//                isstart = false;
+//            }
+//
+//            @Override
+//            public void onSuccess(File rusult) {
+//                tv_length.setText("下载完成");
+//                btn_updata_ok.setText("立即安装");
+//                progressBar.setProgress(100);
+//                isstart = false;
+//                startInstall(rusult.getAbsolutePath());
+//            }
+//        });
+//    }
+
     //开始下载
-    private void startDownload(){
-        String url = "http://imtt.dd.qq.com/16891/14A4C02997E946B800D87348E5E0CBAA.apk?fsname=com.apicloud.A6977052155909_3.4.4_344.apk&csr=1bbd";
-        EHttp.get(this, url, new FileCallBack(filedir, filename) {
-            @Override
-            public void onStart() {
-                super.onStart();
-                tv_length.setText("开始下载：");
-                progressBar.setProgress(0);
-            }
+    private void startRxDownload(){
+        String downUrl = "http://imtt.dd.qq.com/16891/14A4C02997E946B800D87348E5E0CBAA.apk?fsname=com.apicloud.A6977052155909_3.4.4_344.apk&csr=1bbd";
+        HttpUtil.getInstance(this).getNovate()
+                .rxDownload(downUrl, new RxFileCallBack(filedir, filename) {
+                    @Override
+                    public void onStart(Object tag) {
+                        super.onStart(tag);
+                        tv_length.setText("开始下载：");
+                        progressBar.setProgress(0);
+                    }
 
-            @Override
-            public void onDownProgress(long bytesWritten, long totalSize) {
-                tv_length.setText("下载进度:");
-                progressBar.setProgress((int) (bytesWritten*100/totalSize));
-            }
+                    @Override
+                    public void onNext(Object tag, File file) {
+                        tv_length.setText("下载完成");
+                        btn_updata_ok.setText("立即安装");
+                        progressBar.setProgress(100);
+                        isstart = false;
+                        startInstall(file);
+                    }
 
-            @Override
-            public void onFailure(Throwable e) {
-                LogUtil.e("download failed", e.getMessage());
-                FileUtil.deleteFile(filepath);
-                tv_length.setText("下载失败:");
-                btn_updata_ok.setText("重新下载");
-                progressBar.setProgress(0);
-                isstart = false;
-            }
+                    @Override
+                    public void onProgress(Object tag, float progress, long downloaded, long total) {
 
-            @Override
-            public void onSuccess(File rusult) {
-                tv_length.setText("下载完成");
-                btn_updata_ok.setText("立即安装");
-                progressBar.setProgress(100);
-                isstart = false;
-                startInstall(rusult.getAbsolutePath());
-            }
-        });
+                    }
+
+                    @Override
+                    public void onProgress(Object tag, int progress, long speed, long transfered, long total) {
+                        super.onProgress(tag, progress, speed, transfered, total);
+                        tv_length.setText("下载进度:");
+                        progressBar.setProgress((int)progress);
+                    }
+
+                    @Override
+                    public void onError(Object tag, Throwable e) {
+                        LogUtil.e("download failed", e.getMessage());
+                        FileUtil.deleteFile(filepath);
+                        tv_length.setText("下载失败:");
+                        btn_updata_ok.setText("重新下载");
+                        progressBar.setProgress(0);
+                        isstart = false;
+                    }
+
+                    @Override
+                    public void onCancel(Object tag, Throwable e) {
+                        LogUtil.e("download failed", e.getMessage());
+                        FileUtil.deleteFile(filepath);
+                        tv_length.setText("下载失败:");
+                        btn_updata_ok.setText("重新下载");
+                        progressBar.setProgress(0);
+                        isstart = false;
+                    }
+
+                    @Override
+                    public void onCompleted(Object tag) {
+                        super.onCompleted(tag);
+                    }
+                });
     }
 
     //开始安装
@@ -182,6 +249,25 @@ public class Updata extends BaseActivity{
             intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(new File(filepath)), "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        }
+        startActivity(intent);
+    }
+
+    //开始安装
+    private void startInstall(File file){
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        //版本在7.0以上是不能直接通过uri访问的
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // 由于没有在Activity环境下启动Activity,设置下面的标签
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
+            Uri apkUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileProvider", file);
+            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         }
         startActivity(intent);

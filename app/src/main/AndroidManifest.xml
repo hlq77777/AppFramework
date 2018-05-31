@@ -37,6 +37,9 @@
                 android:resource="@xml/file_path"/>
         </provider>
 
+        <activity android:name=".novate.ExampleActivity" > </activity>
+        <activity android:name=".novate.RequstActivity" > </activity>
+
     </application>
 
 </manifest>
