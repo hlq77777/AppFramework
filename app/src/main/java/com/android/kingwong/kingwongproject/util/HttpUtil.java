@@ -12,8 +12,8 @@ public class HttpUtil {
     private static HttpUtil instance;
     private final Context mContext;
     //网络接口地址
-    private static final String debug_url = "https://shuang11.as-exchange.com";
-    private static final String release_url = "https://app.as-exchange.com";
+    private static final String debug_url = "https://xxx.com";
+    private static final String release_url = "https://xxx.com";
 
     private Novate novate;
 
@@ -48,16 +48,11 @@ public class HttpUtil {
         return url + "/" + moudle + "/" + function;
     }
 
-    public Map<String, String> getMap(){
-        Map<String, String> map = new HashMap<>();
-        return map;
-    }
-
     public Novate getNovate(){
         novate = new Novate
                 .Builder(mContext)
                 .baseUrl(getBase_url())
-                .addLog(true)
+                .addLog(!ApkUtil.isRelease())
                 .build();
         return novate;
     }
