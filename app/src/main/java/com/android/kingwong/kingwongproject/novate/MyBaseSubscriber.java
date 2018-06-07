@@ -4,8 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.android.kingwong.novate.BaseSubscriber;
-import com.android.kingwong.novate.util.NetworkUtil;
+import com.android.kingwong.appframework.novate.BaseSubscriber;
+import com.android.kingwong.appframework.novate.util.NetworkUtil;
 
 /**
  * Created by LIUYONGKUI726 on 2017-06-01.
@@ -32,7 +32,7 @@ public abstract class MyBaseSubscriber<T>  extends BaseSubscriber<T> {
 
         if (!NetworkUtil.isNetworkAvailable(context)) {
             Toast.makeText( context, "似乎没网O",Toast.LENGTH_SHORT).show();
-            onCompleted();
+            onComplete();
             return;
         }
         if (progress != null){
@@ -46,8 +46,8 @@ public abstract class MyBaseSubscriber<T>  extends BaseSubscriber<T> {
     }
 
     @Override
-    public void onCompleted() {
-        super.onCompleted();
+    public void onComplete() {
+        super.onComplete();
 
         if (progress != null && progress.isShowing()) {
             progress.dismiss();

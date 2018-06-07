@@ -1,6 +1,5 @@
 package com.android.kingwong.kingwongproject.novate;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,28 +8,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.kingwong.appframework.novate.BaseSubscriber;
+import com.android.kingwong.appframework.novate.Novate;
+import com.android.kingwong.appframework.novate.NovateHttpsFactroy;
+import com.android.kingwong.appframework.novate.NovateResponse;
+import com.android.kingwong.appframework.novate.RxApiManager;
+import com.android.kingwong.appframework.novate.Throwable;
+import com.android.kingwong.appframework.novate.callback.RxFileCallBack;
+import com.android.kingwong.appframework.novate.callback.RxStringCallback;
+import com.android.kingwong.appframework.novate.request.NovateRequest;
+import com.android.kingwong.appframework.novate.util.FileUtil;
+import com.android.kingwong.appframework.novate.util.LogWraper;
 import com.android.kingwong.kingwongproject.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.android.kingwong.kingwongproject.novate.model.MovieModel;
 import com.android.kingwong.kingwongproject.novate.model.ResultModel;
 import com.android.kingwong.kingwongproject.novate.model.SouguBean;
-import com.android.kingwong.novate.ContentType;
-import com.android.kingwong.novate.NovateHttpsFactroy;
-import com.android.kingwong.novate.NovateResponse;
-import com.android.kingwong.novate.BaseSubscriber;
-import com.android.kingwong.novate.Novate;
-import com.android.kingwong.novate.RxApiManager;
-import com.android.kingwong.novate.Throwable;
-import com.android.kingwong.novate.callback.RxFileCallBack;
-import com.android.kingwong.novate.callback.RxGenericsCallback;
-import com.android.kingwong.novate.callback.RxStringCallback;
-import com.android.kingwong.novate.download.UpLoadCallback;
-import com.android.kingwong.novate.request.NovateRequest;
-import com.android.kingwong.novate.request.NovateRequestBody;
-import com.android.kingwong.novate.util.FileUtil;
-import com.android.kingwong.novate.util.LogWraper;
-import com.android.kingwong.novate.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,20 +33,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
+import io.reactivex.disposables.Disposable;
 import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
-import retrofit2.Converter;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import rx.Subscription;
 
 /**
  * Created by Tamic on 2016-06-15.
@@ -263,7 +250,7 @@ public class ExampleActivity extends BaseActivity {
                 .addLog(true)
                 .build();
 
-        Subscription subscription = novate.test("https://apis.baidu.com/apistore/weatherservice/cityname?cityname=上海", null,
+        Disposable subscription = novate.test("https://apis.baidu.com/apistore/weatherservice/cityname?cityname=上海", null,
                 new MyBaseSubscriber<ResponseBody>(ExampleActivity.this) {
                     @Override
                     public void onError(Throwable e) {

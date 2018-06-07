@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.android.kingwong.appframework.Activity.BaseActivity;
 import com.android.kingwong.appframework.ehttp.EHttp;
 import com.android.kingwong.appframework.ehttp.callback.FileCallBack;
+import com.android.kingwong.appframework.novate.Throwable;
+import com.android.kingwong.appframework.novate.callback.RxFileCallBack;
 import com.android.kingwong.appframework.util.ApkUtil;
 import com.android.kingwong.appframework.util.FileUtil;
 import com.android.kingwong.appframework.util.LogUtil;
@@ -28,9 +30,6 @@ import com.android.kingwong.kingwongproject.BuildConfig;
 import com.android.kingwong.kingwongproject.R;
 import com.android.kingwong.kingwongproject.novate.RequstActivity;
 import com.android.kingwong.kingwongproject.util.HttpUtil;
-import com.android.kingwong.novate.Novate;
-import com.android.kingwong.novate.Throwable;
-import com.android.kingwong.novate.callback.RxFileCallBack;
 
 import java.io.File;
 

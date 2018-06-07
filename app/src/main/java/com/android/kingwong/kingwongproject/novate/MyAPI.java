@@ -4,11 +4,11 @@ import com.android.kingwong.kingwongproject.novate.model.SouguBean;
 
 import java.util.Map;
 
+import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
-import rx.Observable;
 
 /**
  * Created by Tamic on 2016-07-07.

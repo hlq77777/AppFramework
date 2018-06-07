@@ -37,5 +37,5 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation project(':appframework')
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'  //当库中引用butterknife时，需在项目app中module内引用annotationProcessor
-    implementation project(':novate')
+    //implementation compile 'com.tamic.novate:novate:1.5.5'
 }

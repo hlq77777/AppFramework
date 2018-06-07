@@ -2,8 +2,9 @@ package com.android.kingwong.kingwongproject.util;
 
 import android.content.Context;
 
+import com.android.kingwong.appframework.novate.Novate;
 import com.android.kingwong.appframework.util.ApkUtil;
-import com.android.kingwong.novate.Novate;
+//import com.android.kingwong.novate.Novate;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,1 +1,1 @@
-include ':app', ':appframework', ':novate'
+include ':app', ':appframework'
