@@ -1,28 +1,31 @@
 package com.android.kingwong.kingwongproject.activity;
 
  import android.os.Bundle;
-import android.view.View;
+ import android.view.View;
 
-import com.android.kingwong.appframework.Activity.BaseActivity;
-import com.android.kingwong.appframework.ehttp.EHttp;
-import com.android.kingwong.appframework.ehttp.callback.ApiCallback;
-import com.android.kingwong.appframework.ehttp.callback.StringCallback;
-import com.android.kingwong.appframework.ehttp.model.CommonResult;
-import com.android.kingwong.appframework.ehttp.request.HttpRequest;
-import com.android.kingwong.appframework.ehttp.request.RequestParams;
-import com.android.kingwong.appframework.entity.FileEntity;
-import com.android.kingwong.appframework.util.IntentUtil;
+ import com.android.kingwong.appframework.Activity.BaseActivity;
+ import com.android.kingwong.appframework.ehttp.EHttp;
+ import com.android.kingwong.appframework.ehttp.callback.ApiCallback;
+ import com.android.kingwong.appframework.ehttp.callback.StringCallback;
+ import com.android.kingwong.appframework.ehttp.model.CommonResult;
+ import com.android.kingwong.appframework.ehttp.request.HttpRequest;
+ import com.android.kingwong.appframework.ehttp.request.RequestParams;
+ import com.android.kingwong.appframework.entity.FileEntity;
+ import com.android.kingwong.appframework.util.IntentUtil;
  import com.android.kingwong.appframework.util.LogUtil;
  import com.android.kingwong.appframework.util.OneClickUtil.AntiShake;
-import com.android.kingwong.kingwongproject.R;
-import com.android.kingwong.kingwongproject.bean.UserInfo;
-import com.android.kingwong.kingwongproject.module.Updata;
+ import com.android.kingwong.kingwongproject.R;
+ import com.android.kingwong.kingwongproject.bean.UserInfo;
+ import com.android.kingwong.kingwongproject.module.Updata;
  import com.android.kingwong.kingwongproject.novate.ExampleActivity;
 
  import java.io.File;
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.concurrent.Callable;
+ import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+ import butterknife.OnClick;
  import io.reactivex.Completable;
  import io.reactivex.Maybe;
  import io.reactivex.MaybeEmitter;
@@ -31,14 +34,17 @@ import butterknife.OnClick;
  import io.reactivex.Observable;
  import io.reactivex.ObservableEmitter;
  import io.reactivex.ObservableOnSubscribe;
+ import io.reactivex.ObservableSource;
+ import io.reactivex.Scheduler;
  import io.reactivex.Single;
  import io.reactivex.SingleEmitter;
  import io.reactivex.SingleOnSubscribe;
- import io.reactivex.annotations.NonNull;
+ import io.reactivex.android.schedulers.AndroidSchedulers;
  import io.reactivex.disposables.Disposable;
  import io.reactivex.functions.Action;
  import io.reactivex.functions.BiConsumer;
  import io.reactivex.functions.Consumer;
+ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity {
 
@@ -51,12 +57,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void OnCreate(Bundle savedInstanceState) {
-        newRxjavaHelloWorld();
-        //newRxjavaDo();
-        newSingle();
-        newCompletable();
-        newMaybe();
-        newCreate();
+        showRxjava();
     }
 
     @OnClick({R.id.button_updata, R.id.button_novate})
@@ -169,7 +170,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void newRxjavaHelloWorld(){
+    private void newRxjavaHelloWorld(){//Rxjava Hello World
         Disposable mDisposable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
@@ -183,7 +184,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void newRxjavaDo(){
+    private void newRxjavaDo(){//do操作符
         Disposable mDisposable = Observable.just("Hello World").doOnSubscribe(new Consumer<Disposable>() {
             //订阅之后回调的方法
             @Override
@@ -246,7 +247,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void newSingle(){
+    private void newSingle(){//被观察者Single，只有onSuccess和onError事件
         Disposable mDisposable = Single.create(new SingleOnSubscribe<String>() {
             @Override
             public void subscribe(SingleEmitter<String> e) throws Exception {
@@ -260,7 +261,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void newCompletable(){
+    private void newCompletable(){//被观察者Completable，不会发射任何数据，只有onComplete和onError事件
         Disposable mDisposable = Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
@@ -269,7 +270,7 @@ public class MainActivity extends BaseActivity {
         }).subscribe();
     }
 
-    private void newMaybe(){
+    private void newMaybe(){//被观察者Maybe，Single和Completable的结合，只有onSuccess，onComplete和onError事件
         Disposable mDisposable = Maybe.create(new MaybeOnSubscribe<String>() {
             @Override
             public void subscribe(MaybeEmitter<String> e) throws Exception {
@@ -283,7 +284,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void newCreate(){
+    private void newCreate(){//操作符create，使用一个函数从头创建一个Observable
         Disposable mDisposable = Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
@@ -314,6 +315,170 @@ public class MainActivity extends BaseActivity {
                 LogUtil.e("newCreate", "Complete");
             }
         });
+    }
+
+    private void newJust(){//操作符just，将一个或多个对象转换成发射这个或这些对象的一个Observable
+        Disposable mDisposable = Observable.just(1, 2, 3)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("newJust", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("newJust", "Throwable: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("newJust", "Complete");
+                    }
+                });
+    }
+
+    private void newFromArray(){//操作符fromArray，将一个数组转换成一个Observable
+        Disposable mDisposable = Observable.fromArray("hello", "from")
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        LogUtil.e("newFromArray", "subscribe: " + s);
+                    }
+                });
+    }
+
+    private void newFromIterable(){//操作符fromIterable，将Iterable转换成一个Observable
+        List<Integer> items = new ArrayList<>();
+        for(int i = 0; i < 3; i++){
+            items.add(i);
+        }
+
+        Disposable mDisposable = Observable.fromIterable(items)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("newFromIterable", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("newFromIterable", "Throwable: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("newFromIterable", "Complete");
+                    }
+                });
+    }
+
+    private void newRepeat(){//操作符repeat，创建一个发射特定数据重复多次的Observable
+        Disposable mDisposable = Observable.just("hello repeat")
+                .repeat(3)
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        LogUtil.e("newRepeat", "subscribe: " + s);
+                    }
+                });
+    }
+
+    private void newDefer(){//操作符defer，只有当订阅者订阅才创建Observable，为每一个订阅创建一个新的Observable
+        Observable observable = Observable
+                .defer(new Callable<ObservableSource<? extends String>>() {
+                    @Override
+                    public ObservableSource<? extends String> call() throws Exception {
+                        return Observable.just("hello defer");
+                    }
+                });
+
+        Disposable mDisposable = observable.subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        LogUtil.e("newDefer", "subscribe: " + s);
+                    }
+                });
+    }
+
+    private void newInterval(){//操作符interval，创建一个按照给定的时间间隔发射整数序列的Observable
+        Disposable mDisposable = Observable.interval(1, TimeUnit.SECONDS)
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        LogUtil.e("newInterval", "subscribe: " + aLong);
+                    }
+                });
+
+        try{
+            Thread.sleep(3000);
+            mDisposable.dispose();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void newTimer(){//操作符timer，创建一个在给定的延时之后发射单个数据的Observable
+        Disposable mDisposable = Observable.timer(2, TimeUnit.SECONDS)
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        LogUtil.e("newTimer", "hello timer");
+                    }
+                });
+
+        try{
+            Thread.sleep(3000);
+            mDisposable.dispose();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void newRange(){//操作符range,创建一个发射指定范围的整数序列的Observable
+        Disposable mDisposable = Observable.range(1,3)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("newRange", "subscribe: " + integer);
+                    }
+                });
+    }
+
+    private void rxjavaScheduler(){//Scheduler线程调度器
+        Disposable mDisposable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                LogUtil.e("rxjavaScheduler", "Scheduler: " + Thread.currentThread().getName());
+                e.onNext("hello scheduler");
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        LogUtil.e("rxjavaScheduler", "Scheduler: " + Thread.currentThread().getName());
+                        LogUtil.e("rxjavaScheduler", "subscribe: " + s);
+                    }
+                });
+    }
+
+    private void showRxjava(){
+        newRxjavaHelloWorld();
+        newRxjavaDo();
+        newSingle();
+        newCompletable();
+        newMaybe();
+        newCreate();
+        newJust();
+        newFromArray();
+        newFromIterable();
+        newRepeat();
+        newDefer();
+        newInterval();
+        newTimer();
+        newRange();
+        rxjavaScheduler();
     }
 
 }
