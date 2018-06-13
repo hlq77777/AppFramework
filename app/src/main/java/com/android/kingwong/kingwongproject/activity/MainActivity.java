@@ -15,6 +15,7 @@ package com.android.kingwong.kingwongproject.activity;
  import com.android.kingwong.appframework.util.LogUtil;
  import com.android.kingwong.appframework.util.OneClickUtil.AntiShake;
  import com.android.kingwong.kingwongproject.R;
+ import com.android.kingwong.kingwongproject.bean.User;
  import com.android.kingwong.kingwongproject.bean.UserInfo;
  import com.android.kingwong.kingwongproject.module.Updata;
  import com.android.kingwong.kingwongproject.novate.ExampleActivity;
@@ -43,7 +44,11 @@ package com.android.kingwong.kingwongproject.activity;
  import io.reactivex.disposables.Disposable;
  import io.reactivex.functions.Action;
  import io.reactivex.functions.BiConsumer;
+ import io.reactivex.functions.BiFunction;
  import io.reactivex.functions.Consumer;
+ import io.reactivex.functions.Function;
+ import io.reactivex.functions.Predicate;
+ import io.reactivex.observables.GroupedObservable;
  import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity {
@@ -463,6 +468,390 @@ public class MainActivity extends BaseActivity {
                 });
     }
 
+    private void rxjavaMap(){//变换操作符map，对序列的每一项都用一个函数来变换Observable发射的数据序列
+        Disposable mDisposable = Observable.just("HELLO")
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String s) throws Exception {
+                        return s.toLowerCase();
+                    }
+                })
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String s) throws Exception {
+                        return s + " world";
+                    }
+                })
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        LogUtil.e("rxjavaMap", "subscribe: " + s);
+                    }
+                });
+    }
+
+    private void rxjavaMap2(){//变换操作符map
+        User user = new User();
+        user.setUserName("KingWong");
+        user.setAddresses("123", "456");
+        user.setAddresses("abc", "def");
+
+        Disposable mDisposable = Observable.just(user)
+                .map(new Function<User, List<User.Address>>() {
+                    @Override
+                    public List<User.Address> apply(User user) throws Exception {
+                        return user.getAddresses();
+                    }
+                })
+                .subscribe(new Consumer<List<User.Address>>() {
+                    @Override
+                    public void accept(List<User.Address> addresses) throws Exception {
+                        for(User.Address address : addresses){
+                            LogUtil.e("rxjavaMap2", "subscribe address: " + address.getStreet());
+                        }
+                    }
+                });
+    }
+
+    private void rxjavaFlatMap(){//变换操作符flatMap，将一个发射数据的Observable变换成为多个Observables，然后将它们发射的数据合并后放进一个单独的Observable
+        User user = new User();
+        user.setUserName("KingWong");
+        user.setAddresses("123", "456");
+        user.setAddresses("abc", "def");
+
+        Disposable mDisposable = Observable.just(user)
+                .flatMap(new Function<User, ObservableSource<User.Address>>() {
+                    @Override
+                    public ObservableSource<User.Address> apply(User user) throws Exception {
+                        return Observable.fromIterable(user.getAddresses());
+                    }
+                })
+                .subscribe(new Consumer<User.Address>() {
+                    @Override
+                    public void accept(User.Address address) throws Exception {
+                        LogUtil.e("rxjavaFlatMap", "subscribe address: " + address.getStreet());
+                    }
+                });
+    }
+
+    private void rxjavaGroupBy(){//变换操作符groupBy,将一个Observable拆分为一些Observables集合，它们中的每一个都发射原始Observable的一个子序列
+        Disposable mDisposable = Observable.range(1, 8)
+                .groupBy(new Function<Integer, String>() {
+                    @Override
+                    public String apply(Integer integer) throws Exception {
+                        return (integer % 2 == 0) ? "偶数组" : "奇数组";
+                    }
+                })
+                .subscribe(new Consumer<GroupedObservable<String, Integer>>() {
+                    @Override
+                    public void accept(final GroupedObservable<String, Integer> stringIntegerGroupedObservable) throws Exception {
+                        if(stringIntegerGroupedObservable.getKey().equals("奇数组")){
+                            Disposable myDisposable = stringIntegerGroupedObservable.subscribe(new Consumer<Integer>() {
+                                @Override
+                                public void accept(Integer integer) throws Exception {
+                                    LogUtil.e("rxjavaGroupBy", stringIntegerGroupedObservable.getKey() + "member: " + integer);
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    private void rxjavaBuffer(){//变换操作符buffer，将一个Observable变换为另一个，由变换产生的Observable发射这些数据的缓存集合
+        Disposable mDisposable = Observable.range(1, 9)
+                .buffer(3)
+                .subscribe(new Consumer<List<Integer>>() {
+                    @Override
+                    public void accept(List<Integer> integers) throws Exception {
+                        LogUtil.e("rxjavaBuffer", "subscribe: " + integers);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaBuffer", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaBuffer", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaWindow(){//变换操作符window,定期将来自原始Observable的数据分解为一个Observable窗口，发射这些窗口，window发射的是Observables
+        Disposable mDisposable = Observable.range(1, 6)
+                .window(2)
+                .subscribe(new Consumer<Observable<Integer>>() {
+                    @Override
+                    public void accept(Observable<Integer> integerObservable) throws Exception {
+                        LogUtil.e("rxjavaWindow", "onNext");
+                        Disposable myDisposable = integerObservable
+                                .subscribe(new Consumer<Integer>() {
+                                    @Override
+                                    public void accept(Integer integer) throws Exception {
+                                        LogUtil.e("rxjavaWindow", "subscribe: " + integer);
+                                    }
+                                });
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaWindow", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaWindow", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaFirst(){//过滤操作符first,只对Observable发射的第一项数据，或者满足某个条件的第一项数据
+        Disposable mDisposable = Observable.just(1, 2, 3)
+                .first(1)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaFirst", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaFirst", "onError: " + throwable.getMessage());
+                    }
+                });
+    }
+
+    private void rxjavaLast(){//过滤操作符last,只对Observable发射的最后一项数据，或者满足某个条件的最后一项数据
+        Disposable mDisposable = Observable.just(1, 2, 3)
+                .last(3)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaLast", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaLast", "onError: " + throwable.getMessage());
+                    }
+                });
+    }
+
+    private void rxjavaTake(){//过滤操作符take,只发射前面的n项数据，发射完成通知，忽略剩余数据
+        Disposable mDisposable = Observable.just(1, 2, 3, 4, 5)
+                .take(3)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaTake", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaTake", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaTake", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaTakeLast(){//过滤操作符takeLast,只发射最后n项数据，发射完成通知，忽略前面数据
+        Disposable mDisposable = Observable.just(1, 2, 3, 4, 5)
+                .takeLast(3)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaTakeLast", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaTakeLast", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaTakeLast", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaSkip(){//过滤操作符skip,忽略Observable发射的前n项数据，保留之后的数据
+        Disposable mDisposable = Observable.just(1, 2, 3, 4, 5)
+                .skip(3)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaSkip", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaSkip", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaSkip", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaSkipLast(){//过滤操作符skipLast,忽略Observable发射的后n项数据，保留前面的数据
+        Disposable mDisposable = Observable.just(1, 2, 3, 4, 5)
+                .skipLast(3)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaSkipLast", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaSkipLast", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaSkipLast", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaElementAt(){//过滤操作符skip,只发射第n项数据，0为第一项索引值
+        Disposable mDisposable = Observable.just(1, 2, 3, 4, 5)
+                .elementAt(3)
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaElementAt", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaElementAt", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaElementAt", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaIgnoreElements(){//过滤操作符ignoreElements,不发射任何数据，只发射Observable的终止通知
+        Disposable mDisposable = Observable.just(1, 2, 3, 4, 5)
+                .ignoreElements()
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaIgnoreElements", "Complete");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaIgnoreElements", "onError: " + throwable.getMessage());
+                    }
+                });
+    }
+
+    private void rxjavaDistinct(){//过滤操作符distinct,过滤掉重复的数据项，只允许还没有发射过的数据项通过
+        Disposable mDisposable = Observable.just(1, 2, 1, 2, 3, 4, 4, 5)
+                .distinct()
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaDistinct", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaDistinct", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaDistinct", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaFilter(){//过滤操作符filter,只发射通过谓词测试函数的数据项
+        Disposable mDisposable = Observable.just(2, 30, 22, 5, 60, 1)
+                .filter(new Predicate<Integer>() {
+                    @Override
+                    public boolean test(Integer integer) throws Exception {
+                        return integer > 10;
+                    }
+                })
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaFilter", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaFilter", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaFilter", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaMerge(){//合并操作符merge,合并多个Observable的发射物
+        Disposable mDisposable = Observable.merge(Observable.just(1, 3, 5), Observable.just(2, 4, 6))
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaMerge", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaMerge", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaMerge", "Complete");
+                    }
+                });
+    }
+
+    private void rxjavaZip(){//合并操作符zip,通过一个函数将多个Observable的发射物结合在一起，基于这个函数的结果为每个结合体发射单个数据项
+        Disposable mDisposable = Observable.zip(Observable.just(1, 3, 5), Observable.just(2, 4, 6),
+                new BiFunction<Integer, Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer integer, Integer integer2) throws Exception {
+                        return integer + integer2;
+                    }
+                })
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        LogUtil.e("rxjavaZip", "subscribe: " + integer);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.e("rxjavaZip", "onError: " + throwable.getMessage());
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("rxjavaZip", "Complete");
+                    }
+                });
+    }
+
     private void showRxjava(){
         newRxjavaHelloWorld();
         newRxjavaDo();
@@ -479,6 +868,24 @@ public class MainActivity extends BaseActivity {
         newTimer();
         newRange();
         rxjavaScheduler();
+        rxjavaMap();
+        rxjavaMap2();
+        rxjavaFlatMap();
+        rxjavaGroupBy();
+        rxjavaBuffer();
+        rxjavaWindow();
+        rxjavaFirst();
+        rxjavaLast();
+        rxjavaTake();
+        rxjavaTakeLast();
+        rxjavaSkip();
+        rxjavaSkipLast();
+        rxjavaElementAt();
+        rxjavaIgnoreElements();
+        rxjavaDistinct();
+        rxjavaFilter();
+        rxjavaMerge();
+        rxjavaZip();
     }
 
 }
