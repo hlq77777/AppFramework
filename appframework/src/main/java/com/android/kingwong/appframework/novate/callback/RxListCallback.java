@@ -54,14 +54,14 @@ public abstract class RxListCallback<T> extends RxGenericsCallback<T, ResponseBo
             collectionType = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         }
         String jstring = new String(response.bytes());
-        Log.d("Novate", jstring);
+        //Log.d("Novate", jstring);
         return transform(jstring, null);
     }
 
 
     public T transform(String response, final Class classOfT) throws ClassCastException {
         JSONObject jsonObject = null;
-        Log.e("xxx", response);
+        //Log.e("xxx", response);
         try {
             jsonObject = new JSONObject(response);
             code = jsonObject.optInt("code");

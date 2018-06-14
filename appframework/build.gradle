@@ -66,4 +66,9 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:3.10.0'
     api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     //api 'com.umeng.analytics:analytics:6.1.4'
+    api 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    api 'com.trello.rxlifecycle2:rxlifecycle-android:2.2.1'
+    api 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
+    api 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
+    api 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.1.1'
 }
