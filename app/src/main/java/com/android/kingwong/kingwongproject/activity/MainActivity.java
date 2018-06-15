@@ -3,22 +3,25 @@ package com.android.kingwong.kingwongproject.activity;
  import android.os.Bundle;
  import android.text.TextUtils;
  import android.view.View;
+ import android.widget.Button;
 
  import com.android.kingwong.appframework.Activity.BaseActivity;
  import com.android.kingwong.appframework.util.IntentUtil;
  import com.android.kingwong.appframework.util.LogUtil;
  import com.android.kingwong.appframework.util.OneClickUtil.AntiShake;
- import com.android.kingwong.appframework.util.RxJavaUtil;
+ import com.android.kingwong.appframework.util.RxJavaUtil.RxJavaUtil;
  import com.android.kingwong.kingwongproject.R;
  import com.android.kingwong.kingwongproject.bean.User;
  import com.android.kingwong.kingwongproject.module.Updata;
  import com.android.kingwong.kingwongproject.novate.ExampleActivity;
+ import com.jakewharton.rxbinding2.view.RxView;
 
  import java.util.ArrayList;
  import java.util.List;
  import java.util.concurrent.Callable;
  import java.util.concurrent.TimeUnit;
 
+ import butterknife.BindView;
  import butterknife.OnClick;
  import io.reactivex.Completable;
  import io.reactivex.Maybe;
@@ -47,6 +50,11 @@ package com.android.kingwong.kingwongproject.activity;
 
 public class MainActivity extends BaseActivity {
 
+    @BindView(R.id.button_updata)
+    Button button_updata;
+    @BindView(R.id.button_novate)
+    Button button_novate;
+
     @Override
     public int getContentViewId() {
         return R.layout.activity_main;
@@ -54,23 +62,43 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void OnCreate(Bundle savedInstanceState) {
+        initView();
         showRxjava();
     }
 
-    @OnClick({R.id.button_updata, R.id.button_novate})
-    public void onClick(View view) {
-        if (AntiShake.check(view.getId())) {
-            //判断是否多次点击
-            return;
-        }
-        switch (view.getId()) {
-            case R.id.button_updata:
-                IntentUtil.startActivity(this, Updata.class);
-                break;
-            case R.id.button_novate:
-                IntentUtil.startActivity(this, ExampleActivity.class);
-                break;
-        }
+//    @OnClick({R.id.button_updata, R.id.button_novate})
+//    public void onClick(View view) {
+//        if (AntiShake.check(view.getId())) {
+//            //判断是否多次点击
+//            return;
+//        }
+//        switch (view.getId()) {
+//            case R.id.button_updata:
+//                IntentUtil.startActivity(this, Updata.class);
+//                break;
+//            case R.id.button_novate:
+//                IntentUtil.startActivity(this, ExampleActivity.class);
+//                break;
+//        }
+//    }
+
+    private void initView(){
+        RxView.clicks(button_updata)
+                .compose(RxJavaUtil.useRxViewTransformer(this))
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        IntentUtil.startActivity(MainActivity.this, Updata.class);
+                    }
+                });
+        RxView.clicks(button_novate)
+                .compose(RxJavaUtil.useRxViewTransformer(this))
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        IntentUtil.startActivity(MainActivity.this, ExampleActivity.class);
+                    }
+                });
     }
 
     private void newRxjavaHelloWorld(){//Rxjava Hello World
@@ -304,37 +332,24 @@ public class MainActivity extends BaseActivity {
     }
 
     private void newInterval(){//操作符interval，创建一个按照给定的时间间隔发射整数序列的Observable
-        Disposable mDisposable = Observable.interval(1, TimeUnit.SECONDS)
+        Disposable mDisposable = Observable.interval(1, TimeUnit.SECONDS, Schedulers.io())
+                .take(3)
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
                         LogUtil.e("newInterval", "subscribe: " + aLong);
                     }
                 });
-
-        try{
-            Thread.sleep(3000);
-            mDisposable.dispose();
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
     }
 
     private void newTimer(){//操作符timer，创建一个在给定的延时之后发射单个数据的Observable
-        Disposable mDisposable = Observable.timer(2, TimeUnit.SECONDS)
+        Disposable mDisposable = Observable.timer(2, TimeUnit.SECONDS, Schedulers.io())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
                         LogUtil.e("newTimer", "hello timer");
                     }
                 });
-
-        try{
-            Thread.sleep(3000);
-            mDisposable.dispose();
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
     }
 
     private void newRange(){//操作符range,创建一个发射指定范围的整数序列的Observable

@@ -1,5 +1,6 @@
 package com.android.kingwong.kingwongproject.module;
 
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -24,17 +25,21 @@ import com.android.kingwong.appframework.util.ApkUtil;
 import com.android.kingwong.appframework.util.FileUtil;
 import com.android.kingwong.appframework.util.LogUtil;
 import com.android.kingwong.appframework.util.OneClickUtil.AntiShake;
+import com.android.kingwong.appframework.util.RxJavaUtil.RxJavaUtil;
+import com.android.kingwong.appframework.util.RxJavaUtil.RxPermissions.RxPermissions;
 import com.android.kingwong.appframework.util.ToastUtil;
 import com.android.kingwong.appframework.widget.NumberProgressBar.NumberProgressBar;
 import com.android.kingwong.kingwongproject.BuildConfig;
 import com.android.kingwong.kingwongproject.R;
 import com.android.kingwong.kingwongproject.novate.RequstActivity;
 import com.android.kingwong.kingwongproject.util.HttpUtil;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 public class Updata extends BaseActivity{
 
@@ -50,6 +55,8 @@ public class Updata extends BaseActivity{
     TextView tv_length;
     @BindView(R.id.btn_updata_ok)
     TextView btn_updata_ok;
+    @BindView(R.id.btn_updata_cancel)
+    TextView btn_updata_cancel;
 
     private boolean isstart = false;
     public static final String filedir = Environment.getExternalStorageDirectory() + "/" + ApkUtil.getAppName();
@@ -64,39 +71,70 @@ public class Updata extends BaseActivity{
     @Override
     public void OnCreate(Bundle savedInstanceState) {
         initView();
+        initClickView();
     }
 
-    @OnClick({R.id.btn_updata_ok, R.id.btn_updata_cancel})
-    public void onClick(View view) {
-        if (AntiShake.check(view.getId())) {
-            //判断是否多次点击
-            return;
-        }
-        switch (view.getId()) {
-            case R.id.btn_updata_ok:
-                if(checkWritePermission()){
-                    if(FileUtil.fileIsExists(filepath)){
-                        startInstall(filepath);
-                    }else{
-                        if(!isstart){
-                            showUpdata();
+//    @OnClick({R.id.btn_updata_ok, R.id.btn_updata_cancel})
+//    public void onClick(View view) {
+//        if (AntiShake.check(view.getId())) {
+//            //判断是否多次点击
+//            return;
+//        }
+//        switch (view.getId()) {
+//            case R.id.btn_updata_ok:
+//                if(checkWritePermission()){
+//                    doUpdata();
+//                }
+//                break;
+//            case R.id.btn_updata_cancel:
+//                finish();
+//                break;
+//        }
+//    }
+
+    private void initClickView(){
+        final RxPermissions rxPermissions = new RxPermissions(this);
+
+        RxView.clicks(btn_updata_ok)
+                .compose(RxJavaUtil.useRxViewTransformer(this))
+                .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean granted) throws Exception {
+                        if(granted){
+                            doUpdata();
                         }else{
-                            if(progressBar.getProgress() != 100){
-                                ToastUtil.getInstance(this).shortToast("正在下载");
-                            }
+
                         }
                     }
-                }
-                break;
-            case R.id.btn_updata_cancel:
-                finish();
-                break;
-        }
+                });
+        RxView.clicks(btn_updata_cancel)
+                .compose(RxJavaUtil.useRxViewTransformer(this))
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        finish();
+                    }
+                });
     }
 
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+    }
+
+    private void doUpdata(){
+        if(FileUtil.fileIsExists(filepath)){
+            startInstall(filepath);
+        }else{
+            if(!isstart){
+                showUpdata();
+            }else{
+                if(progressBar.getProgress() != 100){
+                    ToastUtil.getInstance(this).shortToast("正在下载");
+                }
+            }
+        }
     }
 
     private void initView(){
