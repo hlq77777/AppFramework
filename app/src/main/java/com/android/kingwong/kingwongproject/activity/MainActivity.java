@@ -787,7 +787,7 @@ public class MainActivity extends BaseActivity {
     };
 
     private void rxjavaCompose(){
-        Observable.create(new ObservableOnSubscribe<String>() {
+        ObservableOnSubscribe<String> observable = new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
                 String str = "hello rxjava";
@@ -800,27 +800,29 @@ public class MainActivity extends BaseActivity {
                     emitter.onError(e);
                 }
             }
-        })
+        };
+        Observer<String> observer = new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                LogUtil.e("rxjavaCompose", "onSubscribe d.isDisposed(): " + d.isDisposed());
+            }
+            @Override
+            public void onNext(String o) {
+                LogUtil.e("rxjavaCompose", "subscribe: " + o);
+            }
+            @Override
+            public void onError(Throwable e) {
+                LogUtil.e("rxjavaCompose", "onError: " + e.getMessage());
+            }
+            @Override
+            public void onComplete() {
+                LogUtil.e("rxjavaCompose", "Complete");
+            }
+        };
+        Observable.create(observable)
                 .compose(upperCaseTransformer)
                 .compose(schedulersTransformer)
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        LogUtil.e("rxjavaCompose", "onSubscribe d.isDisposed(): " + d.isDisposed());
-                    }
-                    @Override
-                    public void onNext(String o) {
-                        LogUtil.e("rxjavaCompose", "subscribe: " + o);
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        LogUtil.e("rxjavaCompose", "onError: " + e.getMessage());
-                    }
-                    @Override
-                    public void onComplete() {
-                        LogUtil.e("rxjavaCompose", "Complete");
-                    }
-                });
+                .subscribe(observer);
     }
 
     private void showRxjava(){
